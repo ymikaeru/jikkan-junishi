@@ -12,7 +12,7 @@ const mo=(k,h)=>`<button type="button" class="chip mo" data-more="${k}">${h} <sp
 let LAST={};
 const MKR=['gōō-satsu','anken-satsu','honmei-satsu','honmei-tekisatsu','saiha · geppa','kippō','saidai kippō'];
 const MK=[['五黄殺','A direção onde está o <b>五黄土星</b>, a estrela do centro, a mais forte: rege a transformação, inclusive a decomposição. Nas nove estrelas, o que se começa nessa direção tende a se estragar “por dentro”, com problemas causados por nós mesmos. Vale para todas as pessoas.'],
- ['暗剣殺','A direção <b>oposta à estrela 5</b> (五黄) (暗剣 = “espada escondida”). Nas nove estrelas, traz problemas que vêm de fora e de repente, sem culpa própria. Vale para todas as pessoas. Quando a estrela 5 está no centro, não há 五黄殺 nem 暗剣殺.'],
+ ['暗剣殺','A direção <b>oposta à estrela 5</b> (五黄); o nome 暗剣 quer dizer “espada escondida”. Nas nove estrelas, traz problemas que vêm de fora e de repente, sem culpa própria. Vale para todas as pessoas. Quando a estrela 5 está no centro, não há 五黄殺 nem 暗剣殺.'],
  ['本命殺','A direção onde está a <b>sua própria estrela do ano</b> (本命星) naquele período. O 気学 a associa a problemas de saúde e de energia pessoal. Só vale para quem tem esse 本命星.'],
  ['本命的殺','A direção <b>oposta à sua estrela do ano</b> (的 = “alvo”). O 気学 a associa a erros de julgamento, a mirar no lugar errado. Só vale para quem tem esse 本命星.'],
  ['歳破・月破','O lado <b>oposto ao ramo do ano</b> (歳破) ou do mês (月破); 破 = “quebrar”. O que se faz nessa direção tende a se romper. Vale para todos. No 暦 ocupa só 15°, mas no mapa de oito direções marca a casa inteira.'],
