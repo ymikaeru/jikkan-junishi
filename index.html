@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Os dez troncos e os doze ramos — um roteiro para experimentar</title>
+<meta name="description" content="Calcule os quatro pilares (四柱) de qualquer data: ano, mês, dia e hora em 十干十二支, com hora solar verdadeira, leitura, 五行, 大運 e previsões.">
+<meta name="theme-color" content="#c8341f">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Calculadora de 十干十二支">
+<meta property="og:description" content="Os quatro pilares (四柱) de qualquer data, com leitura, 五行, 陰陽 e previsões.">
+<script>window.addEventListener('error',function(e){var b=document.getElementById('errbar');if(b){b.hidden=false;b.textContent='Algo deu errado no cálculo: '+e.message+' ('+(e.filename||'').split('/').pop()+':'+e.lineno+'). Recarregue a página com Ctrl+F5; se continuar, envie esta mensagem.'}});</script>
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@600;800&family=Zen+Kaku+Gothic+New:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css?v=39">
+<script src="js/app.js?v=39" defer></script>
+<script src="js/toukyu.js?v=39" defer></script>
+<script src="js/kyusei.js?v=39" defer></script>
+<script src="js/strokes.js?v=39" defer></script>
+<script src="js/seimei.js?v=39" defer></script>
+<script src="js/eki.js?v=39" defer></script>
+<script src="js/kanshi.js?v=39" defer></script>
+</head>
+<body>
+<div id="errbar" class="errbar" role="alert" hidden></div>
+<nav class="topbar" aria-label="Seções"><a href="#t1">Troncos</a><a href="#t2">Três yang</a><a href="#kanshi">Ramos</a><a href="#toukyu">Três rodas</a><a href="#hata">Campo</a><a href="#nomes">Nomes</a><a href="#tougu">Aprimoramento</a><a href="#eki">I Ching</a><a href="#proveito">Proveito</a><a href="#kyusei">Nove estrelas</a><a href="#outros" data-open>Outros</a><a href="#koyomi">Calendário</a><a href="#ref-shichu" data-open>Quatro pilares</a></nav>
+<div class="band">
+  <h1><span class="seal">暦</span>Os dez troncos e os doze ramos</h1>
+  <p class="note" style="margin:4px 0 0">十干十二支 (<i>jikkan jūnishi</i>), o antigo calendário do Extremo Oriente</p>
+  <p class="sub">Um roteiro para <b>experimentar</b> e <b>aprofundar</b> esse calendário, passo a passo: os dez troncos, os três yang, os doze ramos, as três rodas, o campo e a fisionomia, os doze nomes, o aprimoramento do caráter, o I Ching e, no fim, o proveito na prática. Os caracteres em kanji aparecem sempre com a leitura ou a tradução.</p>
+  <ol class="steps"><li><b>Informe</b> a data, a hora e o local de nascimento.</li><li><b>Siga o roteiro</b>: cada parte mostra o cálculo com os seus dados e tem botões “›” para saber mais.</li><li>Nada é guardado: é uma consulta pontual.</li></ol>
+
+  <form class="ctl" id="f">
+    <label>Data de nascimento <input type="date" id="d" required></label>
+    <label>Hora <input type="time" id="t" step="60"></label>
+    <label class="chk"><input type="checkbox" id="nh"> Não sei a hora</label>
+    <label>Local de nascimento
+      <select id="city">
+        <optgroup label="Japão"><option data-lon="139.69" data-tz="9">Tóquio</option><option data-lon="135.50" data-tz="9">Osaka</option><option data-lon="135.77" data-tz="9">Kyoto</option><option data-lon="135.19" data-tz="9">Kobe</option><option data-lon="136.91" data-tz="9">Nagoya</option><option data-lon="141.35" data-tz="9">Sapporo</option><option data-lon="140.87" data-tz="9">Sendai</option><option data-lon="132.46" data-tz="9">Hiroshima</option><option data-lon="130.40" data-tz="9">Fukuoka</option><option data-lon="127.68" data-tz="9">Naha</option></optgroup>
+        <optgroup label="Coreia"><option data-lon="126.98" data-tz="9">Seul</option><option data-lon="129.08" data-tz="9">Busan</option></optgroup>
+        <optgroup label="Brasil"><option data-lon="-46.63" data-tz="-3">São Paulo</option><option data-lon="-43.17" data-tz="-3">Rio de Janeiro</option><option data-lon="-47.88" data-tz="-3">Brasília</option><option data-lon="-43.94" data-tz="-3">Belo Horizonte</option><option data-lon="-49.27" data-tz="-3">Curitiba</option><option data-lon="-51.23" data-tz="-3">Porto Alegre</option><option data-lon="-38.50" data-tz="-3">Salvador</option><option data-lon="-34.88" data-tz="-3">Recife</option><option data-lon="-38.54" data-tz="-3">Fortaleza</option><option data-lon="-48.50" data-tz="-3">Belém</option><option data-lon="-60.02" data-tz="-4">Manaus</option></optgroup>
+        <optgroup label="Outros"><option data-lon="-9.14" data-tz="0">Lisboa</option><option data-lon="-74.01" data-tz="-5">Nova York</option><option data-lon="-118.24" data-tz="-8">Los Angeles</option><option value="x" data-lon="" data-tz="">Outro (digitar longitude)</option></optgroup>
+      </select>
+    </label>
+    <button type="button" id="now">Agora</button>
+    <details class="adv"><summary>Opções avançadas</summary><div class="adv-in">
+    <label>Fuso
+      <select id="tz">
+        <option value="9">Japão (JST, UTC+9)</option>
+        <option value="-3">Brasília (UTC−3)</option>
+        <option value="-4">Manaus (UTC−4)</option>
+        <option value="0">UTC / Lisboa</option>
+        <option value="1">Europa Central (UTC+1)</option>
+        <option value="-5">Nova York (UTC−5)</option>
+        <option value="-8">Los Angeles (UTC−8)</option>
+      </select>
+    </label>
+    <label>Longitude (°, oeste negativo) <input type="number" id="lon" step="0.01" min="-180" max="180" value="139.69" inputmode="decimal"></label>
+    <label class="chk"><input type="checkbox" id="sol" checked> Usar 真太陽時</label>
+    <label class="chk"><input type="checkbox" id="dst"> Horário de verão no nascimento</label>
+    <label>Ano muda em
+      <select id="ym">
+        <option value="risshun">立春 (risshun, ~4 fev)</option>
+        <option value="jan">1º de janeiro</option>
+      </select>
+    </label>
+    <label class="chk"><input type="checkbox" id="z23"> Dia muda às 23h (子刻)</label>
+    <label>Sexo (para o 大運)
+      <select id="sx"><option value="m">Masculino</option><option value="f">Feminino</option></select>
+    </label>
+    <p class="note">Fuso e longitude vêm do local escolhido. 真太陽時 é a hora pelo sol de verdade (corrige a hora do relógio pela posição da cidade). As outras opções só mudam casos de fronteira e o 四柱推命.</p>
+    </div></details>
+  </form>
+  <p class="note" id="solar" aria-live="polite"></p>
+
+  <div class="pillars" id="pl"></div>
+  <p class="sum" id="sum"></p>
+  <p class="note" style="max-width:80ch">Cada cartão é um <b>pilar</b>: o caractere de cima é um dos 10 troncos (十干, dá o elemento e o yin/yang) e o de baixo é um dos 12 ramos (十二支, o animal). O ano começa no 立春 (por volta de 4 de fevereiro) e o mês, no 節入り (por volta do dia 5), não em 1º de janeiro nem no dia 1.</p>
+</div>
+
+<div class="band" id="t1">
+  <h2>Os dez troncos <span class="note">cinco elementos, cada um em yang e yin</span></h2>
+  <p class="lead">Os dez troncos combinam os <b>cinco elementos</b> com <b>yang e yin</b>. Em japonês, a versão yang de cada elemento é o “irmão mais velho” (兄, <i>e</i>) e a yin, o “irmão mais novo” (弟, <i>to</i>): 甲 se lê <i>ki-no-e</i> e 乙, <i>ki-no-to</i>.</p>
+  <div class="bas">
+    <div class="card">
+      <h3>Os cinco elementos (五行) <button type="button" class="chip mo" data-more="c:el">saiba mais <span aria-hidden="true">›</span></button></h3>
+      <p>Tudo é feito de cinco energias: <b class="e0">Madeira 木</b>, <b class="e1">Fogo 火</b>, <b class="e2">Terra 土</b>, <b class="e3">Metal 金</b> e <b class="e4">Água 水</b>. Elas se relacionam de dois jeitos:</p>
+      <svg viewBox="0 0 320 300" class="wuxing" role="img" aria-label="Ciclo dos cinco elementos: a Madeira alimenta o Fogo, o Fogo a Terra, a Terra o Metal, o Metal a Água e a Água a Madeira. A Madeira controla a Terra, a Terra a Água, a Água o Fogo, o Fogo o Metal e o Metal a Madeira.">
+        <defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0L10,5L0,10z" fill="currentColor"/></marker></defs>
+        <g fill="none" stroke-width="2" class="gen"><path d="M160,58 A110,110 0 0 1 262,128" marker-end="url(#ah)"/><path d="M268,158 A110,110 0 0 1 232,250" marker-end="url(#ah)"/><path d="M206,264 A110,110 0 0 1 114,264" marker-end="url(#ah)"/><path d="M88,250 A110,110 0 0 1 52,158" marker-end="url(#ah)"/><path d="M58,128 A110,110 0 0 1 140,58" marker-end="url(#ah)"/></g>
+        <g fill="none" stroke-width="1.5" stroke-dasharray="5 4" class="ctl"><path d="M160,78 L210,232" marker-end="url(#ah)"/><path d="M200,248 L76,152" marker-end="url(#ah)"/><path d="M80,140 L238,140" marker-end="url(#ah)"/><path d="M244,152 L120,248" marker-end="url(#ah)"/><path d="M110,232 L160,78" marker-end="url(#ah)"/></g>
+        <g font-family="Shippori Mincho,serif" font-weight="800" font-size="22" text-anchor="middle">
+          <circle cx="160" cy="44" r="24" class="c0"/><text x="160" y="52" class="t0">木</text>
+          <circle cx="276" cy="140" r="24" class="c1"/><text x="276" y="148" class="t1">火</text>
+          <circle cx="226" cy="268" r="24" class="c2"/><text x="226" y="276" class="t2">土</text>
+          <circle cx="94" cy="268" r="24" class="c3"/><text x="94" y="276" class="t3">金</text>
+          <circle cx="44" cy="140" r="24" class="c4"/><text x="44" y="148" class="t4">水</text>
+        </g>
+      </svg>
+      <p class="note"><b>Linha cheia</b> (相生, “gerar”): a Madeira alimenta o Fogo, o Fogo vira Terra (cinzas), a Terra produz Metal, o Metal condensa Água e a Água nutre a Madeira. <b>Linha tracejada</b> (相剋, “controlar”): a Madeira prende a Terra, a Terra represa a Água, a Água apaga o Fogo, o Fogo derrete o Metal e o Metal corta a Madeira.</p>
+    </div>
+    <div class="card">
+      <h3>Os dez troncos (十干)</h3>
+      <p>Cada elemento aparece duas vezes: a versão <b>yang</b> (陽, ativa, o “irmão mais velho”, <i>e</i>) e a <b>yin</b> (陰, receptiva, o “irmão mais novo”, <i>to</i>). Os seus aparecem destacados; toque num tronco para saber mais.</p>
+      <div class="scroll"><table class="mt"><thead><tr><th>Elemento</th><th>Yang (兄 e)</th><th>Yin (弟 to)</th></tr></thead><tbody>
+        <tr><td class="e0">木 Madeira</td><td data-s="0">甲 kinoe</td><td data-s="1">乙 kinoto</td></tr>
+        <tr><td class="e1">火 Fogo</td><td data-s="2">丙 hinoe</td><td data-s="3">丁 hinoto</td></tr>
+        <tr><td class="e2">土 Terra</td><td data-s="4">戊 tsuchinoe</td><td data-s="5">己 tsuchinoto</td></tr>
+        <tr><td class="e3">金 Metal</td><td data-s="6">庚 kanoe</td><td data-s="7">辛 kanoto</td></tr>
+        <tr><td class="e4">水 Água</td><td data-s="8">壬 mizunoe</td><td data-s="9">癸 mizunoto</td></tr>
+      </tbody></table></div>
+    </div>
+  </div>
+</div>
+
+<div class="band" id="t2">
+  <h2>Os três yang <span class="note">丙午, <i>hi-no-e-uma</i>, o Cavalo de Fogo</span></h2>
+  <p class="lead">O par <b>丙午</b> (<i>hi-no-e-uma</i>, o Cavalo de Fogo) é famoso no Japão: junta o Fogo, o “irmão mais velho” e o Cavalo, três partes yang. Veja como os seus pares se decompõem e experimente qualquer outro.</p>
+  <div class="card" id="ks-yang"></div>
+</div>
+
+<div class="band" id="kanshi">
+  <h2>Os doze ramos <span class="note">os doze animais</span></h2>
+  <p class="lead">Os doze ramos são associados a <b>doze animais</b>, e a tradição liga cada um a um tipo de temperamento. Eles marcam os <b>anos, meses, dias e horas</b>. Veja os seus e quantas naturezas diferentes aparecem no seu nascimento.</p>
+  <div class="bas">
+    <div class="card">
+      <h3>Os doze ramos (十二支)</h3>
+      <p>São os doze animais. Cada um marca um ano, um mês, uma hora do dia e uma direção. Os seus aparecem destacados; toque num ramo para saber mais.</p>
+      <div class="scroll"><table class="mt"><thead><tr><th>Ramo</th><th>Animal</th><th>Hora</th><th>Mês (a partir de)</th><th>Direção</th></tr></thead><tbody>
+        <tr data-b="0"><td>子 ne</td><td>Rato</td><td>23–1h</td><td>~7 dez</td><td>norte</td></tr>
+        <tr data-b="1"><td>丑 ushi</td><td>Boi</td><td>1–3h</td><td>~6 jan</td><td>norte-nordeste</td></tr>
+        <tr data-b="2"><td>寅 tora</td><td>Tigre</td><td>3–5h</td><td>~4 fev</td><td>leste-nordeste</td></tr>
+        <tr data-b="3"><td>卯 u</td><td>Coelho</td><td>5–7h</td><td>~6 mar</td><td>leste</td></tr>
+        <tr data-b="4"><td>辰 tatsu</td><td>Dragão</td><td>7–9h</td><td>~5 abr</td><td>leste-sudeste</td></tr>
+        <tr data-b="5"><td>巳 mi</td><td>Serpente</td><td>9–11h</td><td>~6 mai</td><td>sul-sudeste</td></tr>
+        <tr data-b="6"><td>午 uma</td><td>Cavalo</td><td>11–13h</td><td>~6 jun</td><td>sul</td></tr>
+        <tr data-b="7"><td>未 hitsuji</td><td>Cabra</td><td>13–15h</td><td>~7 jul</td><td>sul-sudoeste</td></tr>
+        <tr data-b="8"><td>申 saru</td><td>Macaco</td><td>15–17h</td><td>~8 ago</td><td>oeste-sudoeste</td></tr>
+        <tr data-b="9"><td>酉 tori</td><td>Galo</td><td>17–19h</td><td>~8 set</td><td>oeste</td></tr>
+        <tr data-b="10"><td>戌 inu</td><td>Cão</td><td>19–21h</td><td>~8 out</td><td>oeste-noroeste</td></tr>
+        <tr data-b="11"><td>亥 i</td><td>Javali</td><td>21–23h</td><td>~7 nov</td><td>norte-noroeste</td></tr>
+      </tbody></table></div>
+    </div>
+    <div class="card">
+      <h3>O ciclo de 60 (六十干支) <button type="button" class="chip mo" data-more="c:c6">saiba mais <span aria-hidden="true">›</span></button></h3>
+      <p>Um tronco e um ramo formam um par, como <b>甲子</b> (kinoe-ne). Os troncos andam de 10 em 10 e os ramos de 12 em 12; juntos, só se repetem depois de <b>60</b> passos. Por isso os 60 anos de um ciclo completo (o 還暦, aos 60 anos de idade).</p>
+      <p>Esse mesmo ciclo marca os <b>anos</b>, os <b>meses</b> e os <b>dias</b>. Assim, toda data tem um ano, um mês e um dia em 十干十二支, base de tudo o que vem a seguir.</p>
+      <p class="note">Detalhe importante: o ano tradicional começa no 立春 (~4 de fevereiro). Quem nasceu em janeiro ou no começo de fevereiro pertence ao ano anterior.</p>
+    </div>
+  </div>
+  <h3 class="h3">Seu ano, mês, dia e hora</h3>
+  <div class="card ks-sum" id="ks-sum"></div>
+  <div class="kss" id="ks-cards"></div>
+  <h3 class="h3">Os seus animais</h3>
+  <div class="card" id="ks-anim"></div>
+  <h3 class="h3">Como interpretar</h3>
+  <div class="bas" id="ks-bal"></div>
+  <h3 class="h3">Resumo da personalidade</h3>
+  <div class="card ks-pers" id="ks-pers"></div>
+  <details class="more"><summary>Os próximos anos (tradição popular)</summary><div id="ks-prev"></div></details>
+</div>
+
+<div class="band" id="toukyu">
+  <h2>As três rodas <span class="note">a arte do <i>tengen</i> (天源術)</span></h2>
+  <p class="lead">Na arte do <i>tengen</i>, o temperamento de nascença se lê em <b>três rodas</b>, a partir da data da concepção: a do <b>ano</b> (roda grande), a do <b>mês</b> (roda média) e a do <b>dia</b> (roda pequena). Confira com os seus dados.</p>
+  <h3 class="h3">Como se calcula, com os seus dados</h3>
+  <ol class="calc" id="tq-steps"></ol>
+  <h3 class="h3">Seu resultado</h3>
+  <p id="tq-info"></p>
+  <div class="tqs" id="tq-wheels"></div>
+  <h3 class="h3">Como interpretar as três rodas</h3>
+  <div class="bas tq-how">
+    <div class="card"><h3>Roda grande · 大輪 (ano)</h3><p>A <b>base</b> do temperamento: o fundo que acompanha a vida inteira e que se liga ao que vem da família. Na versão de 1896, é a roda que mais aparece dos 40 aos 60 anos. Um autor moderno lhe dá o maior peso (cerca de 60%).</p></div>
+    <div class="card"><h3>Roda média · 中輪 (mês)</h3><p>O temperamento da <b>fase adulta</b>, quando se trabalha e se constrói a vida: dos 20 aos 40 anos na versão de 1896 (outros autores dizem “meia-idade”). Peso de cerca de 25%.</p></div>
+    <div class="card"><h3>Roda pequena · 小輪 (dia)</h3><p>O temperamento da <b>infância e juventude</b>, até os 20 anos. Depois disso continua presente, em segundo plano. Peso de cerca de 15%.</p></div>
+    <div class="card"><h3>Como ler as três juntas</h3><ol class="calc"><li>Comece pela roda da <b>sua fase de vida</b>: é o temperamento mais visível agora.</li><li>Lembre que a <b>roda grande</b> está sempre ao fundo.</li><li>Em cada roda, as <b>virtudes</b> aparecem quando o temperamento está em equilíbrio, e os <b>vícios (癖)</b> quando ele passa da medida.</li><li>O 淘宮術 não lê um destino fixo: a proposta é praticar o “<b>como 淘げる</b>” de cada roda, lapidando os vícios para que sobrem as virtudes.</li></ol></div>
+  </div>
+  <div id="tq-cmp"></div>
+</div>
+
+<div class="band" id="hata">
+  <h2>O campo e a fisionomia <span class="note"><i>hatake</i> (畑)</span></h2>
+  <div id="tq-hata"></div>
+</div>
+
+<div class="band" id="nomes">
+  <h2>Os doze nomes <span class="note">um nome de temperamento para cada ramo</span></h2>
+  <p class="lead">Nas artes do <i>tengen</i> e do <i>tōkyū</i>, cada ramo troca o nome de animal por um nome de <b>temperamento</b>. Toque num nome para ver tudo sobre ele.</p>
+  <div class="scroll"><table class="pt names12"><thead><tr><th>Ramo</th><th>Nome</th><th>Em português</th><th>O caractere significa</th></tr></thead><tbody><tr class="clk" data-more="t:0"><td>子 Rato</td><td class="kk2">滋</td><td>magnetismo</td><td>nutrir, multiplicar</td></tr><tr class="clk" data-more="t:1"><td>丑 Boi</td><td class="kk2">結</td><td>união</td><td>atar, amarrar</td></tr><tr class="clk" data-more="t:2"><td>寅 Tigre</td><td class="kk2">演</td><td>atuação</td><td>estender, desempenhar</td></tr><tr class="clk" data-more="t:3"><td>卯 Coelho</td><td class="kk2">豊</td><td>abundância</td><td>fartura</td></tr><tr class="clk" data-more="t:4"><td>辰 Dragão</td><td class="kk2">奮</td><td>ímpeto</td><td>animar-se, agitar-se</td></tr><tr class="clk" data-more="t:5"><td>巳 Serpente</td><td class="kk2">止</td><td>parada</td><td>parar, conter</td></tr><tr class="clk" data-more="t:6"><td>午 Cavalo</td><td class="kk2">合</td><td>junção</td><td>unir, juntar</td></tr><tr class="clk" data-more="t:7"><td>未 Cabra</td><td class="kk2">老</td><td>velhice</td><td>maduro</td></tr><tr class="clk" data-more="t:8"><td>申 Macaco</td><td class="kk2">緩</td><td>lentidão</td><td>frouxo, folgado</td></tr><tr class="clk" data-more="t:9"><td>酉 Galo</td><td class="kk2">惰 (堕)</td><td>indolência</td><td>preguiça, decair</td></tr><tr class="clk" data-more="t:10"><td>戌 Cão</td><td class="kk2">練 (煉)</td><td>treino</td><td>refinar, temperar</td></tr><tr class="clk" data-more="t:11"><td>亥 Javali</td><td class="kk2">実</td><td>fruto</td><td>fruto, verdade</td></tr></tbody></table></div>
+  <ul class="note src">
+    <li><b>滋 “magnetismo”</b>: o caractere 滋 significa “nutrir, fazer crescer”; “magnetismo” corresponderia a 磁, um caractere parecido. O sentido de nutrir e multiplicar combina com a explicação antiga do ramo 子 (≈ 孳, multiplicar).</li>
+    <li><b>São esses nomes que formam as três rodas</b>: um resultado como 合・豊・老 junta três desses doze temperamentos.</li>
+    <li>Duas grafias variam entre os textos: 惰 / 堕 e 練 / 煉. O site usa 堕 e 煉 nas fichas, como as fontes atuais.</li>
+  </ul>
+  <h3 class="h3">Virtudes, vícios e como 淘げる</h3>
+  <div class="scroll"><table class="pt" id="tq-table"><thead><tr><th>Ramo</th><th>宮</th><th>O nome significa</th><th>Virtudes</th><th>Vícios (癖)</th><th>Como 淘げる</th></tr></thead><tbody></tbody></table></div>
+</div>
+
+<div class="band" id="tougu">
+  <h2>O aprimoramento do caráter <span class="note">a arte do <i>tōkyū</i> (淘宮術): “joeirar” os defeitos</span></h2>
+  <p class="lead">A arte do <i>tōkyū</i> (淘宮術), criada em 1834, usa as três rodas como <b>método de aprimoramento</b>: conhecer os vícios (癖) de nascença para lapidá-los, o que se chama <i>yonageru</i> (淘げる), “joeirar”, e cultivar as virtudes. É uma disciplina de esforço constante.</p>
+  <div class="card" id="tq-read"></div>
+  <details class="more"><summary>História do método</summary><p class="note intro">O 天源術 lia o destino pelos doze ramos. Em 1834, 横山丸三 (aluno de 奥野南卜) fez dele o 淘宮術: conhecer o próprio temperamento para “淘げる”, lavar e apurar os vícios (癖) e cultivar as virtudes (徳). O temperamento vem da data da concepção, contada como 265 dias antes do nascimento (十月十日). O ramo do ano dessa data é a roda grande (大輪), o do mês, a roda média (中輪), e o do dia, a roda pequena (小輪). Cada ramo recebe um nome próprio, o 宮.</p>
+</details>
+  <details class="more"><summary>Fontes e variações</summary>
+  <ul class="note src">
+    <li>Fases da vida de cada roda: versão de 井上 (1896) citada na Yourpedia (小輪 até os 20, 中輪 dos 20 aos 40, 大輪 dos 40 aos 60). Outros autores ligam o ano ao temperamento inato e à família, o mês à meia-idade e o dia à infância.</li>
+    <li>Data da concepção: 265 dias (Kotobank, senjutsu.jp, 淘宮術奥伝). Outras versões usam 10 meses, ou cerca de 9 meses com corte em 26/10. Teste de validação: 23/12/1882 dá 合・豊・老.</li>
+    <li>Virtudes, vícios e correções resumidos de senjutsu.jp e daiyu.studio, blogs atuais sem fonte primária. Fisionomia e sinais de cada 宮: daiyu.studio (豊, 奮, 止) e uma explicação de Meishu-sama sobre o 天源術 (19/01/1949), resumidos com outras palavras; a mesma explicação confirma as fases 小輪 até os 20, 中輪 dos 21 aos 40 e 大輪 dos 41 aos 60. Os nomes de 酉 e 戌 aparecem também como 惰 e 練. O 畑 (ハタケ) é lido na fisionomia e muda com o tempo: não sai da data, por isso entra como auto-observação.</li>
+  </ul></details>
+</div>
+
+<div class="band" id="eki">
+  <h2>O I Ching <span class="note">易: os oito trigramas, as varetas e os blocos de cálculo</span></h2>
+  <p class="lead">O I Ching (易, “o livro das mutações de Zhou”) é o clássico chinês das mutações; a tradição atribui a Confúcio os comentários que o completaram. Os trigramas se tiram com <b>varetas</b> (筮竹) e o hexagrama se monta com <b>blocos de madeira</b> (算木). Experimente uma tiragem.</p>
+  <ol class="calc"><li>Pense numa pergunta concreta.</li><li>Tire com as varetas (o método antigo, passo a passo) ou com 3 moedas.</li><li>Veja o hexagrama arrumado nos 算木 e leia o que ele descreve. Se houver linhas móveis, veja para onde a situação tende (之卦).</li></ol>
+  <div class="ctl2"><button type="button" id="ek-c3">Tirar com 3 moedas</button><button type="button" id="ek-cy">Tirar com as varetas (本筮法)</button><button type="button" id="ek-cr">Tirar pelo 略筮法</button><label>Ou consultar <select id="ek-sel"></select></label></div>
+  <div id="ek-out"></div>
+  <details class="more"><summary>Os 8 trigramas (八卦)</summary><div class="scroll"><table class="pt" id="ek-tri"><thead><tr><th>Nº</th><th>Linhas</th><th>卦</th><th>Imagem</th><th>Natureza</th><th>Família</th><th>Direção</th><th>九星</th><th>五行</th></tr></thead><tbody></tbody></table></div></details>
+  <h3 class="h3">Os oito trigramas e as oito forças (八力)</h3>
+  <div class="card">
+  <p>O xintoísmo fala de <b>oito forças</b> (八力) que formam todas as coisas do céu e da terra, cada uma ligada a uma divindade da criação. São também oito, como os trigramas, e a comparação entre os dois conjuntos é antiga. Lado a lado, na ordem em que costumam ser listados:</p>
+  <div class="scroll"><table class="pt"><thead><tr><th>Trigrama</th><th>Força</th><th>Divindade</th></tr></thead><tbody>
+  <tr><td class="kk2">乾 天</td><td>動 movimento</td><td>大戸地 Ōtonoji</td></tr>
+  <tr><td class="kk2">兌 沢</td><td>静 quietude</td><td>大戸辺 Ōtonobe</td></tr>
+  <tr><td class="kk2">離 火</td><td>解 dissolução</td><td>宇比地根 Uijine</td></tr>
+  <tr><td class="kk2">震 雷</td><td>凝 solidificação</td><td>須比地根 Suijine</td></tr>
+  <tr><td class="kk2">巽 風</td><td>引 atração</td><td>生杙 Ikugui</td></tr>
+  <tr><td class="kk2">坎 水</td><td>弛 afrouxamento</td><td>角杙 Tsunugui</td></tr>
+  <tr><td class="kk2">艮 山</td><td>合 união</td><td>面足 Omotaru</td></tr>
+  <tr><td class="kk2">坤 地</td><td>分 divisão</td><td>惶根 Kashikone</td></tr>
+  </tbody></table></div>
+  <p class="note">As forças vêm em pares opostos (movimento e quietude, dissolução e solidificação, atração e afrouxamento, união e divisão), assim como os trigramas se organizam em pares de opostos.</p></div>
+  <details class="more"><summary>Fontes e regras</summary>
+  <ul class="note src">
+    <li>Ordem e nomes dos 64 hexagramas pelo 周易; nº dos trigramas pela ordem 先天 (乾1 兌2 離3 震4 巽5 坎6 艮7 坤8); direções e 九星 pela ordem 後天. Os nomes em português são resumos curtos, não traduções do texto clássico.</li>
+    <li>Moedas: três moedas por linha (cara 3, coroa 2); 6 e 9 são linhas móveis. 略筮法: três números (1–8, 1–8, 1–6) dão o trigrama de baixo, o de cima e a linha móvel.</li>
+  </ul></details>
+</div>
+
+<div class="band" id="proveito">
+  <h2>O proveito, na prática</h2>
+  <p class="lead">A arte do <i>tōkyū</i> sempre teve um sentido prático: <b>conhecer o próprio temperamento</b> para melhorar e <b>compreender o dos outros</b> para conviver melhor. Experimente em três passos; nada é guardado.</p>
+  <div class="pv-steps">
+    <div class="card" id="pv-me"></div>
+    <div class="card" id="pv-other"><h3>2. Compreender o outro</h3><label>Data de nascimento de alguém próximo <input type="date" id="pv-o"></label><div id="pv-out"></div></div>
+    <div class="card" id="pv-today"></div>
+  </div>
+</div>
+
+<div class="band" id="kyusei">
+  <h2>As nove estrelas <span class="note"><i>kyūsei kigaku</i> (九星気学) · comentado em outras respostas</span></h2>
+  <p class="lead">Dá a sua <b>estrela de nascimento</b> (uma de nove) e mostra, a cada ano e mês, quais <b>direções</b> o 気学 tradicional considera favoráveis ou desfavoráveis para você.</p>
+  <h3 class="h3">Como se calcula, com os seus dados</h3>
+  <ol class="calc" id="kz-steps"></ol>
+  <details class="more"><summary>Como as estrelas se movem</summary><p class="note intro">As nove estrelas giram pelo quadrado mágico de 3 × 3 (洛書): a estrela que ocupa o centro dá nome ao ano e ao mês, e as outras ocupam as oito direções numa ordem fixa. O ano muda no 立春 e o mês no 節入り. Pela posição de cada estrela se leem o temperamento e as direções boas e ruins para cada pessoa.</p>
+</details>
+  <h3 class="h3">Seu resultado</h3>
+  <div class="luck" id="kz-me"></div>
+  <h3 class="h3">As direções <button type="button" class="chip mo" data-more="k:dir">o que são <span aria-hidden="true">›</span></button></h3>
+  <p style="max-width:80ch">Responde à pergunta: <b>para que lado o 気学 considera bom ou ruim você se mover neste ano e neste mês?</b> Serve para movimentos a partir da sua casa: mudar de residência, viajar, fazer uma obra, começar algo num lugar novo. O mapa do ano vale para mudanças grandes; o do mês, para coisas curtas.</p>
+  <p class="note" style="max-width:80ch">Cada quadrado é um mapa visto de cima, com o <b>sul em cima</b> (como nos calendários japoneses): a casa do meio é o centro e as outras oito são as direções. Em cada casa está a estrela que “mora” ali no período. <b style="color:var(--e0)">Verde</b> = direção que o 気学 tradicional considera favorável para você; <b style="color:var(--red)">vermelho</b> = direção que ele considera desfavorável (para mudanças, viagens longas, obras).</p>
+  <div class="ctl2 kz-ctl">
+    <label>Ver as direções de outro ano <input type="number" id="kz-y" min="1900" max="2100" step="1" inputmode="numeric"><span class="hint">Mude o ano para ver o mapa e as divindades das direções daquele ano (ex.: o ano que vem, para planejar uma mudança). O mapa do mês continua sendo o do mês atual.</span></label>
+    <label>Comparar com outra pessoa <input type="date" id="kz-o" aria-describedby="kz-o-h"><span class="hint" id="kz-o-h">Digite a data de nascimento de alguém: o site calcula a estrela do ano dessa pessoa e mostra como ela combina com a sua. <button type="button" class="chip mo" data-more="k:afin">como funciona <span aria-hidden="true">›</span></button></span></label>
+  </div>
+  <p id="kz-comp"></p>
+  <div class="two kz-two"><div id="kz-year"></div><div id="kz-month"></div></div>
+  <p class="note">Sul em cima, como nos 暦 japoneses. <span class="kz-key bad">vermelho</span> = direção que o 気学 tradicional considera desfavorável (五黄殺: onde está o 五黄; 暗剣殺: o oposto; 本命殺: onde está a sua estrela; 本命的殺: o oposto; 歳破/月破: oposto ao ramo do ano ou do mês). <span class="kz-key good">verde</span> = 吉方: estrela que combina com o seu 本命星; <span class="kz-key best">verde forte</span> = 最大吉方: combina também com o 月命星.</p>
+  <details class="more"><summary>Divindades das direções do ano (八将神, 金神, 恵方)</summary><div id="kz-dirs"></div></details>
+  <details class="more"><summary>Fontes e regras</summary>
+  <ul class="note src">
+    <li>本命星: (11 − ano mod 9), com o ano pelo 立春. 月命星: no mês 寅 começa em 八白 (anos 一白・四緑・七赤), 二黒 (二黒・五黄・八白) ou 五黄 (三碧・六白・九紫) e desce uma estrela por mês. 傾斜: palácio onde cai o 本命星 no mapa do 月命星.</li>
+    <li>八将神 pelo ramo do ano (Biblioteca da Dieta, 日本の暦); 金神 pelo tronco do ano; 大金神 e 姫金神 pelo ramo do ano, sempre opostos; 歳徳神 (恵方) pelo tronco do ano. No mapa de oito direções, 歳破 e 月破 marcam o palácio inteiro; no 暦 eles ocupam só 15°.</li>
+  </ul></details>
+</div>
+
+<details class="band ref" id="outros">
+  <summary><h2>Outros estudos <span class="note">leitura do nome · clique para abrir</span></h2></summary>
+  <p class="note">Um método que usa os traços dos caracteres, guardado aqui para consulta.</p>
+<div class="sub-band" id="seimei">
+  <h2>A leitura do nome <span class="note"><i>seimei handan</i> (姓名判断)</span></h2>
+  <p class="lead">Lê o <b>nome</b> pelo número de traços de cada caractere: soma os traços em cinco grupos e vê o equilíbrio entre par (陰) e ímpar (陽).</p>
+  <ol class="calc"><li>Escreva o sobrenome e o nome em kanji ou kana (ou toque em “Ver um exemplo”).</li><li>Os traços dos kanji aparecem sozinhos, em azul; os de kana você digita.</li><li>O site soma os traços em cinco quadros e mostra o resultado.</li></ol>
+  <p class="note intro">O nome é lido pelo número de traços (画数) de cada caractere. Somam-se cinco quadros (五格), e cada caractere é marcado como 陽 (traços ímpares, ○) ou 陰 (traços pares, ●). Escreva o nome em kanji ou kana: os traços dos kanji vêm preenchidos (em azul) e podem ser corrigidos; os de kana e de kanji raros você digita.</p>
+  <div class="ctl2"><label>姓 (sobrenome) <input type="text" id="sm-sei" autocomplete="off"></label><label>名 (nome) <input type="text" id="sm-mei" autocomplete="off"></label><label>Contagem dos traços <select id="sm-mode"><option value="k">熊崎式 (forma antiga, números pelo valor)</option><option value="n">Japonesa atual</option></select></label><label class="chk"><input type="checkbox" id="sm-rei" checked> Somar 霊数 (熊崎式)</label><label>総格 de outra pessoa <input type="number" id="sm-p" min="1" max="120" inputmode="numeric"></label><button type="button" id="sm-ex">Ver um exemplo</button></div>
+  <div id="sm-boxes"></div>
+  <div id="sm-out"></div>
+  <details class="more"><summary>Fontes e regras de contagem</summary>
+  <ul class="note src">
+    <li>Cinco quadros pelo 熊崎式 (1929): 天格 = sobrenome, 人格 = último caractere do sobrenome + primeiro do nome, 地格 = nome, 総格 = tudo, 外格 = 天格 + 地格 − 人格. 霊数: soma-se 1 ao sobrenome ou ao nome de um só caractere.</li>
+    <li>三才: elemento de cada quadro pelo último algarismo (1–2 木, 3–4 火, 5–6 土, 7–8 金, 9–0 水).</li>
+    <li>Traços automáticos: tabela Unihan do Unicode (kTotalStrokes e kRSUnicode, U+4E00–U+9FFF). “Japonesa atual” corrige 艹 e 辶 para 3 traços. “熊崎式” conta pela forma cheia os radicais abreviados (氵 4, 扌 4, 忄 4, 犭 4, 艹 6, 礻 5, 衤 6, 王 5, 月 de 肉 6, 阝 esquerdo 8, 阝 direito 7, 罒 6, 辶 7) e os números 一 a 十 pelo valor. Alguns kanji ainda podem sair com um traço a mais ou a menos (por exemplo, a família de 者, que no japonês atual perdeu um ponto): confira. Para nomes em 新字体 que o 熊崎式 lê na forma antiga (沢 → 澤), digite a forma antiga.</li>
+    <li>As tabelas de sorte dos números de 1 a 81 variam entre as escolas e não estão incluídas.</li>
+  </ul></details>
+</div>
+</details>
+
+<div class="band two" id="koyomi">
+  <section>
+    <h2>Início dos meses em <span id="sy"></span> <span class="note"><i>setsuiri</i> (節入り)</span></h2>
+    <div class="scroll"><table id="sk"><thead><tr><th>Mês</th><th>節</th><th class="r">Início</th></tr></thead><tbody></tbody></table></div>
+  </section>
+  <section>
+    <h2>O ciclo de 60 pares</h2>
+    <p class="note" style="margin-top:0">Toque num 干支 para ver os anos correspondentes (1900–2100).</p>
+    <div class="grid" id="g"></div>
+    <div class="years" id="yr"></div>
+  </section>
+</div>
+
+<details class="band ref" id="ref-shichu">
+  <summary><h2>Os quatro pilares <span class="note"><i>shichū suimei</i> (四柱推命) · referência — clique para abrir</span></h2></summary>
+  <p class="note">Método chinês de leitura pelos quatro pilares, guardado aqui só como referência.</p>
+  <div class="mode" role="group" aria-label="Modo de exibição"><button type="button" id="m-s" aria-pressed="true">Leitura simples</button><button type="button" id="m-p" aria-pressed="false">Modo estudioso</button></div>
+<div class="sub-band" id="pro-band" hidden>
+  <h2>Modo estudioso</h2>
+  <p class="note" style="margin-top:0">Tudo o que o cálculo encontra, sem notas nem estrelas, como nas ferramentas de quem estuda 四柱推命. A interpretação fica com você.</p>
+  <div class="proh" id="pro-head"></div>
+  <div class="scroll"><table class="pt" id="pro-chart"></table></div>
+  <h3 class="h3">Relações entre os pilares (原局)</h3>
+  <ul class="li" id="pro-rel"></ul>
+  <h3 class="h3">大運</h3>
+  <p class="note" id="pro-dy-info"></p>
+  <div class="scroll"><table class="pt" id="pro-dy"><thead><tr><th>Idade</th><th>Anos</th><th>干支</th><th>通変星</th><th>蔵干</th><th>十二運</th><th>納音</th><th>神殺</th><th>Relações com o mapa</th></tr></thead><tbody></tbody></table></div>
+  <h3 class="h3">小運 <span class="note">(antes do primeiro 大運)</span></h3>
+  <div id="pro-sy"></div>
+  <h3 class="h3">流年</h3>
+  <label class="inl">A partir do ano <input type="number" id="pro-y" min="1900" max="2089" step="1" inputmode="numeric"></label>
+  <div class="scroll"><table class="pt" id="pro-ly"><thead><tr><th>Ano</th><th>干支</th><th>通変星</th><th>蔵干</th><th>十二運</th><th>神殺</th><th>Relações com o mapa</th><th>大運</th></tr></thead><tbody></tbody></table></div>
+  <ul class="note" style="font-size:13px;max-width:85ch;margin-top:12px">
+    <li><b>Abreviações dos 蔵干</b>: 比 比肩 · 劫 劫財 · 食 食神 · 傷 傷官 · 才 偏財 · 財 正財 · 殺 偏官 · 官 正官 · 梟 偏印 · 印 印綬. Em negrito, o tronco principal (no mês, o que governa pelo 人元司令).</li>
+    <li><sup>※</sup> Uniões entre pilares não vizinhos: a maioria dos autores considera que não se formam ou ficam fracas.</li>
+    <li><b>天剋地冲</b>: troncos em relação de 七殺 (mesma polaridade, um controla o outro) e ramos em 冲. <b>半合</b> só com o ramo central (子午卯酉) do 三合.</li>
+    <li><b>胎元</b>: tronco do mês +1, ramo do mês +3. <b>命宮</b>: hora de nascimento posta no palácio do sol (pelo 中気), contando até 卯; tronco pelo 五虎遁 do ano.</li>
+    <li><b>小運</b>: a partir do pilar da hora, na direção do 大運, um pilar por ano (三命通會; outra tradição começa em 丙寅 para homens e 壬申 para mulheres).</li>
+    <li><b>神殺</b> pelo tronco do dia: 天乙貴人, 文昌貴人, 金輿, 建禄, 羊刃 (só troncos yang, como no 子平真詮). Pelos ramos do ano e do dia: 駅馬, 桃花, 華蓋, 劫煞, 亡神. Pelo mês: 天徳貴人, 月徳貴人. 魁罡 só no pilar do dia.</li>
+    <li>O ano dos pilares segue sempre o 立春, mesmo com a opção “1º de janeiro”.</li>
+  </ul>
+</div>
+
+<div class="sub-band" id="simple-read">
+  <h2>Sua leitura</h2>
+  <details class="gl"><summary>Como ler esta página</summary>
+  <ul>
+    <li><b>Seus quatro pilares</b>: o ano, o mês, o dia e a hora em que você nasceu, cada um escrito com dois caracteres do calendário chinês.</li>
+    <li><b>Seu elemento</b>: vem do pilar do dia e representa você. Tudo é lido em relação a ele.</li>
+    <li><b>Os cinco elementos</b>: Madeira, Fogo, Terra, Metal e Água. Alguns equilibram o seu mapa (te ajudam), outros o desequilibram (pesam).</li>
+    <li><b>Estrelas (1 a 5)</b>: resumem como um período tende a ser para você. ▲ marca um ponto a favor e ▼ um ponto de atenção.</li>
+    <li><b>Fases de 10 anos, anos e meses</b>: os ciclos usados na previsão. Cada ano é lido dentro da sua fase, e cada mês dentro do seu ano.</li>
+    <li><b>Quer os termos técnicos?</b> Use o botão “Modo estudioso” no topo da página.</li>
+  </ul></details>
+  <div class="card" id="r-sum"></div>
+  <div class="read">
+    <div>
+      <div class="card" id="r-day"></div>
+      <div class="card" id="r-yj"></div>
+      <div class="card" id="r-ts"></div>
+      <div class="card" id="r-12"></div>
+    </div>
+    <div>
+      <div class="card" id="r-luck"></div>
+      <div class="card" id="r-el"></div>
+      <div class="card" id="r-ss"></div>
+    </div>
+  </div>
+  <p class="note">Interpretações segundo o 四柱推命 tradicional, em versão resumida. Valem como reflexão, não como certeza.</p>
+</div>
+
+<div class="sub-band" id="simple-fc">
+  <h2>Previsões</h2>
+  <p class="note" style="margin-top:0">As estrelas (1 a 5) resumem quatro coisas: se o período traz os elementos que te ajudam, padrões clássicos conhecidos, como ele mexe com o seu mapa e, para anos e meses, a fase em que caem. As regras vêm dos textos clássicos; os pesos numéricos são uma síntese minha.</p>
+  <div class="card" id="f-dy"></div>
+  <div class="read">
+    <div class="card" id="f-ly"></div>
+    <div class="card" id="f-lm"></div>
+  </div>
+</div>
+
+  <h3 class="h3">Fontes do 四柱推命</h3>
+  <ul class="note src">
+    <li><b>地支藏干</b> (troncos ocultos de cada ramo): 淵海子平, 《又地支藏遁歌》.</li>
+    <li><b>人元司令</b> (qual tronco governa o mês conforme os dias desde o 節入り): 子平真詮. O 淵海子平 e as escolas japonesas usam contagens um pouco diferentes.</li>
+    <li><b>調候用神</b>: 窮通宝鑑 (用神提要). Na linha 辛 × 子月, a fonte consultada traz “申”, um ramo; usei 甲, por ser claramente um erro de digitação.</li>
+    <li><b>格局</b> (estrutura) e o que cada uma favorece ou teme: 子平真詮, 《論用神》 (順用・逆用), e o 淵海子平: “官怕傷,財怕劫,印綬見財”.</li>
+    <li><b>Padrões com nome</b> (傷官見官, 梟神奪食, 比劫奪財, 殺印相生, 食神制殺…): termos clássicos do 子平.</li>
+    <li><b>神殺</b>: 天乙貴人 (“甲戊庚牛羊,乙己鼠猴鄉,丙丁豬雞位,壬癸兔蛇藏,六辛逢馬虎”; algumas edições antigas tiram o 庚 da primeira linha), 駅馬, 桃花 e 華蓋 pelo 三合 do ano e do dia, 魁罡 pelos dias 戊戌・庚戌・庚辰・壬辰.</li>
+    <li><b>得令</b> pelo 旺相 da estação do mês; <b>得地</b> por raiz nos 蔵干; <b>得勢</b> pelos troncos visíveis. <b>得令・得地・得勢</b>, <b>扶抑</b>, <b>冲・合・刑</b>, <b>大運</b> (3 dias = 1 ano): regras clássicas do 子平; o peso de cada uma nas estrelas é uma escolha minha.</li>
+    <li><b>Ano dentro da fase</b>: 滴天髓, 「休咎繫乎運，尤繫乎歲」 (a sorte depende da fase e, mais ainda, do ano); 子平真詮, 《論行運》: cada período é lido junto com o mapa, e uma união que amarra o que ajuda torna ruim um período que parece bom (似喜實忌). 天剋地冲, 伏吟・反吟, 歳運併臨, 六害 e 方合: termos clássicos do 子平.</li>
+    <li><b>Troncos ocultos nos períodos</b>: cada ramo age pelos seus 蔵干 (淵海子平), com o peso de cada um proporcional aos dias que ele governa no 人元司令 do 子平真詮 (ex.: 寅 = 甲 53%, 丙 23%, 戊 23%). Um tronco oculto que também aparece no mapa (透干) ganha peso. 通根 (tronco enraizado no próprio ramo), 蓋頭 e 截脚 (tronco e ramo que se controlam e se enfraquecem): regras clássicas para julgar 大運 e 流年. Os padrões com nome também são checados pelo tronco principal do ramo, com metade do peso, seguindo o 《論行運》: cada caractere do período é comparado com o mapa.</li>
+    <li><b>Previsões</b>: As estrelas somam quatro coisas: se os elementos do período te ajudam (o tronco e todos os troncos ocultos do ramo, 蔵干), os padrões clássicos com nome (como 傷官見官), como o período mexe com o seu mapa (天剋地冲・反吟, 伏吟, 冲, 合 e 合絆, 刑, 害, 三合, 方合, 空亡, 天乙貴人) e, para anos e meses, a fase e o ano em que caem (歳運). As regras vêm dos clássicos; os pesos numéricos são uma síntese minha.</li>
+  </ul>
+</details>
+
+<div class="band">
+  <h2>Fontes gerais</h2>
+  <ul class="note src">
+    <li><b>真太陽時</b>: 4 min por grau de longitude + equação do tempo (fórmula da NOAA, erro de cerca de 1 minuto).</li>
+    <li>淘宮術: Kotobank (三輪, 淘宮術), Wikipedia e Yourpedia (淘宮術), senjutsu.jp, daiyu.studio, 自然福智 (淘宮術奥伝を読む).</li>
+    <li>九星・方位: regras usuais do 九星気学; Biblioteca Nacional da Dieta (日本の暦, 暦注); ja.wikid.org (金神).</li>
+  </ul>
+</div>
+<script>
+document.querySelectorAll('a[data-open]').forEach(function(a){a.addEventListener('click',function(){var d=document.querySelector(a.getAttribute('href'));if(d)d.open=true})});
+if(location.hash){var d0=document.querySelector(location.hash);if(d0&&d0.tagName==='DETAILS')d0.open=true}
+</script>
+</body>
+</html>
