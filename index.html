@@ -14,14 +14,14 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@600;800&family=Zen+Kaku+Gothic+New:wght@400;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/style.css?v=40">
-<script src="js/app.js?v=40" defer></script>
-<script src="js/toukyu.js?v=40" defer></script>
-<script src="js/kyusei.js?v=40" defer></script>
-<script src="js/strokes.js?v=40" defer></script>
-<script src="js/seimei.js?v=40" defer></script>
-<script src="js/eki.js?v=40" defer></script>
-<script src="js/kanshi.js?v=40" defer></script>
+<link rel="stylesheet" href="css/style.css?v=41">
+<script src="js/app.js?v=41" defer></script>
+<script src="js/toukyu.js?v=41" defer></script>
+<script src="js/kyusei.js?v=41" defer></script>
+<script src="js/strokes.js?v=41" defer></script>
+<script src="js/seimei.js?v=41" defer></script>
+<script src="js/eki.js?v=41" defer></script>
+<script src="js/kanshi.js?v=41" defer></script>
 </head>
 <body>
 <div id="errbar" class="errbar" role="alert" hidden></div>
@@ -219,18 +219,18 @@
   <div class="ctl2"><button type="button" id="ek-c3">Tirar com 3 moedas</button><button type="button" id="ek-cy">Tirar com as varetas (本筮法)</button><button type="button" id="ek-cr">Tirar pelo 略筮法</button><label>Ou consultar <select id="ek-sel"></select></label></div>
   <div id="ek-out"></div>
   <details class="more"><summary>Os 8 trigramas (八卦)</summary><div class="scroll"><table class="pt" id="ek-tri"><thead><tr><th>Nº</th><th>Linhas</th><th>卦</th><th>Imagem</th><th>Natureza</th><th>Família</th><th>Direção</th><th>九星</th><th>五行</th></tr></thead><tbody></tbody></table></div></details>
-  <h3 class="h3">Os oito trigramas e as oito forças (八力)</h3>
+  <h3 class="h3">Os oito trigramas e as oito forças <button type="button" class="chip mo" data-more="f:x">o que são <span aria-hidden="true">›</span></button></h3>
   <div class="card">
-  <p>O xintoísmo fala de <b>oito forças</b> (八力) que formam todas as coisas do céu e da terra, cada uma ligada a uma divindade da criação. São também oito, como os trigramas, e a comparação entre os dois conjuntos é antiga. Lado a lado, na ordem em que costumam ser listados:</p>
+  <p>O xintoísmo fala de <b>oito forças</b> (八力) que formam todas as coisas do céu e da terra, cada uma ligada a uma divindade da criação. São também oito, como os trigramas, e a comparação entre os dois conjuntos é antiga. Lado a lado, na ordem em que costumam ser listados (toque numa linha para saber mais sobre a força):</p>
   <div class="scroll"><table class="pt"><thead><tr><th>Trigrama</th><th>Força</th><th>Divindade</th></tr></thead><tbody>
-  <tr><td class="kk2">乾 天</td><td>動 movimento</td><td>大戸地 Ōtonoji</td></tr>
-  <tr><td class="kk2">兌 沢</td><td>静 quietude</td><td>大戸辺 Ōtonobe</td></tr>
-  <tr><td class="kk2">離 火</td><td>解 dissolução</td><td>宇比地根 Uijine</td></tr>
-  <tr><td class="kk2">震 雷</td><td>凝 solidificação</td><td>須比地根 Suijine</td></tr>
-  <tr><td class="kk2">巽 風</td><td>引 atração</td><td>生杙 Ikugui</td></tr>
-  <tr><td class="kk2">坎 水</td><td>弛 afrouxamento</td><td>角杙 Tsunugui</td></tr>
-  <tr><td class="kk2">艮 山</td><td>合 união</td><td>面足 Omotaru</td></tr>
-  <tr><td class="kk2">坤 地</td><td>分 divisão</td><td>惶根 Kashikone</td></tr>
+  <tr class="clk" data-more="f:0"><td class="kk2">乾 天</td><td>動 movimento</td><td>大戸地 Ōtonoji</td></tr>
+  <tr class="clk" data-more="f:1"><td class="kk2">兌 沢</td><td>静 quietude</td><td>大戸辺 Ōtonobe</td></tr>
+  <tr class="clk" data-more="f:2"><td class="kk2">離 火</td><td>解 dissolução</td><td>宇比地根 Uijine</td></tr>
+  <tr class="clk" data-more="f:3"><td class="kk2">震 雷</td><td>凝 solidificação</td><td>須比地根 Suijine</td></tr>
+  <tr class="clk" data-more="f:4"><td class="kk2">巽 風</td><td>引 atração</td><td>生杙 Ikugui</td></tr>
+  <tr class="clk" data-more="f:5"><td class="kk2">坎 水</td><td>弛 afrouxamento</td><td>角杙 Tsunugui</td></tr>
+  <tr class="clk" data-more="f:6"><td class="kk2">艮 山</td><td>合 união</td><td>面足 Omotaru</td></tr>
+  <tr class="clk" data-more="f:7"><td class="kk2">坤 地</td><td>分 divisão</td><td>惶根 Kashikone</td></tr>
   </tbody></table></div>
   <p class="note">As forças vêm em pares opostos (movimento e quietude, dissolução e solidificação, atração e afrouxamento, união e divisão), assim como os trigramas se organizam em pares de opostos.</p></div>
   <details class="more"><summary>Fontes e regras</summary>

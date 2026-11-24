@@ -75,3 +75,32 @@ function init(){
 }
 if(document.readyState!=='loading')init();else document.addEventListener('DOMContentLoaded',init);
 })();
+
+// ---- as oito forças (八力): fichas de "saiba mais" ----
+(()=>{
+const K=window.KS||(window.KS={});K.moreFns=K.moreFns||{};
+const FR=[
+ {k:'動',pt:'movimento',r:'dō',d:'a força que põe em marcha, que faz agir, crescer e circular',deus:'Ōtonoji',dk:'大戸地',kj:'意富斗能地',par:1,tri:['乾','天','céu']},
+ {k:'静',pt:'quietude',r:'sei',d:'a força que acalma, assenta e conserva; o repouso que dá estabilidade',deus:'Ōtonobe',dk:'大戸辺',kj:'大斗乃辨',par:0,tri:['兌','沢','lago']},
+ {k:'解',pt:'dissolução',r:'kai',d:'a força que solta, desfaz e torna fluido o que estava preso',deus:'Uijine',dk:'宇比地根',kj:'宇比地邇',par:3,tri:['離','火','fogo']},
+ {k:'凝',pt:'solidificação',r:'gyō',d:'a força que condensa, firma e dá forma ao que era fluido',deus:'Suijine',dk:'須比地根',kj:'須比智邇',par:2,tri:['震','雷','trovão']},
+ {k:'引',pt:'atração',r:'in',d:'a força que puxa, aproxima e reúne',deus:'Ikugui',dk:'生杙',kj:'活杙',par:5,tri:['巽','風','vento']},
+ {k:'弛',pt:'afrouxamento',r:'shi',d:'a força que solta a tensão, distende e abre espaço',deus:'Tsunugui',dk:'角杙',kj:'角杙',par:4,tri:['坎','水','água']},
+ {k:'合',pt:'união',r:'gō',d:'a força que junta, integra e faz de muitos um só',deus:'Omotaru',dk:'面足',kj:'於母陀流',par:7,tri:['艮','山','montanha']},
+ {k:'分',pt:'divisão',r:'bun',d:'a força que separa, distingue e diferencia, dando a cada coisa o seu lugar',deus:'Kashikone',dk:'惶根',kj:'阿夜訶志古泥',par:6,tri:['坤','地','terra']}];
+const mo=(k,h)=>`<button type="button" class="chip mo" data-more="${k}">${h} <span aria-hidden="true">›</span></button>`;
+K.moreFns.f=v=>{
+  if(v==='x')return `<h3>As oito forças <span class="note">八力, <i>hachiriki</i></span></h3>
+   <p>No xintoísmo, as oito forças são vistas como as forças que formam <b>todas as coisas do céu e da terra</b>, a fonte de toda atividade: ${FR.map((f,i)=>mo('f:'+i,f.pt)).join(' ')}</p>
+   <p><b>Vêm em quatro pares de opostos</b>: movimento e quietude, dissolução e solidificação, atração e afrouxamento, união e divisão. Nenhuma age sozinha: as coisas nascem e se mantêm do equilíbrio entre as duas forças de cada par, de modo parecido com yang e yin.</p>
+   <p><b>As divindades.</b> Cada força está ligada a uma divindade da criação. No 古事記 (<i>Kojiki</i>, o livro mais antigo da mitologia japonesa), essas oito divindades aparecem em casais, entre as “sete gerações dos deuses” (神世七代, <i>kamiyo nanayo</i>), logo antes de Izanagi e Izanami, que formam a terra.</p>
+   <p><b>E os trigramas.</b> O I Ching também tem oito trigramas, organizados em pares de opostos (céu e terra, fogo e água, trovão e vento, montanha e lago). Por isso os dois conjuntos de oito costumam ser comparados.</p>`;
+  const i=+v,f=FR[i],p=FR[f.par];
+  return `<div class="kd-big">${f.k}</div><h3>${f.pt.charAt(0).toUpperCase()+f.pt.slice(1)} <span class="note">${f.k}, <i>${f.r}</i></span></h3>
+   <p><b>O que é:</b> ${f.d}.</p>
+   <p><b>O par oposto:</b> ${mo('f:'+f.par,`${p.pt} (${p.k})`)}. As duas forças se completam: uma sem a outra desequilibra.</p>
+   <p><b>A divindade:</b> <i>${f.deus}</i> (${f.dk}; no 古事記, ${f.kj}), que forma casal com <i>${p.deus}</i>.</p>
+   <p><b>Lado a lado com:</b> o trigrama ${f.tri[0]} ${f.tri[1]} (${f.tri[2]}), na ordem em que os dois conjuntos costumam ser listados.</p>
+   <p>${mo('f:x','as oito forças')}</p>`;
+};
+})();
