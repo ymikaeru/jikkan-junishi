@@ -16,6 +16,7 @@ const TQ=[
  {n:'煉',y:'レン',v:'paciente, persistente, leal',c:'raiva guardada; mau humor; remói por dentro',k:'abrir o peito; cumprimentar com alegria; lembrar do que é bom',f:'rosto pálido ou azulado; expressão de quem guarda as coisas para si',o:['Rosto pálido ou azulado','Irrita-se fácil e guarda a raiva dentro']},
  {n:'実',y:'ウ',v:'entende depressa e além do que foi dito; honesto, prático, decidido',c:'teimosia; impõe a opinião; franqueza que magoa; pavio curto',k:'pensar duas vezes (二念) antes de decidir; ouvir os outros',f:'jeito sério, sólido e calmo',o:['Jeito sério, sólido e calmo','Fala pouco e decide com firmeza']}];
 const OFF=265; // 十月十日: nascimento − 265 dias
+const TQP=['magnetismo','união','atuação','abundância','ímpeto','parada','junção','velhice','lentidão','indolência','treino','fruto']; // como na tabela "Os doze nomes"
 const mod=(a,n)=>((a%n)+n)%n;
 // significado literal de cada nome; vários ecoam as explicações antigas do ramo (子≈孳, 寅≈演, 卯≈茂, 辰≈震, 巳≈已, 酉≈老, 亥≈核)
 const TQR=['ji','ketsu','en','ho','fun','to','go','ro','kan','da','ren','u'];
@@ -53,15 +54,20 @@ function run(c){
   last={W,age};K.tqW=W.map(w=>w.N%12);
   const names=W.map(w=>TQ[w.N%12].n);
   const rep=[...new Set(names)].filter(n=>names.filter(x=>x===n).length>1);
-  $('tq-info').innerHTML=`<span class="tq-big">${W.map(w=>mo('t:'+w.N%12,`<b>${TQ[w.N%12].n}</b>`)).join('・')}</span> <span class="note">roda grande · média · pequena${rep.length?` · ${rep.map(n=>`${n} aparece em ${names.filter(x=>x===n).length} rodas`).join('; ')}`:''}</span>
-   <p class="note">Toque para saber mais: ${mo('q:tougu','o que é 淘げる')} ${mo('q:conc','por que a concepção')} ${mo('q:nomes','os doze nomes')} ${mo('q:hata','e o 畑?')} ${mo('q:hist','história')}</p>`;
-  $('tq-wheels').innerHTML=W.map(w=>{const br=w.N%12,t=TQ[br],edge=w.nb.some(x=>x%12!==br),now=age>=w.ph[0]&&age<w.ph[1];
-    return `<div class="tqc${now?' now':''}"><div class="chips">${mo('w:'+w.idx,`${w.lab} · ${w.k}`)}</div>
-    <div class="k">${t.n} <span class="note" style="font-size:15px">${t.y}</span></div>
-    <div class="note">${B[br]} · ${AN[br]} · ${kan(w.N)} · ${w.ph[0]?`${w.ph[0]} a ${w.ph[1]} anos`:'até os 20 anos'}${now?' <b style="color:var(--red)">← a sua fase agora</b>':''}</div>
-    <p><b>Virtudes</b>: ${t.v}.</p><p><b>Vícios (癖)</b>: ${t.c}.</p><p><b>Como 淘げる</b>: ${t.k}.</p>${t.f?`<p class="note">Fisionomia: ${t.f}.</p>`:''}
-    <div class="chips">${mo('t:'+br,`tudo sobre ${t.n}`)}</div>
-    ${edge?'<p class="note" style="color:var(--red)">Perto de uma divisa (立春 ou 節入り): um dia a mais ou a menos muda esta roda.</p>':''}</div>`}).join('');
+  // resultado em linguagem simples: os três nomes e o que está mais visível agora
+  const A0=Math.floor(age),actW=W.find(w=>age>=w.ph[0]&&age<w.ph[1]);
+  $('tq-info').innerHTML=`<p class="note" style="margin:0">Seu temperamento em três nomes</p>
+   <p class="tq-big">${W.map(w=>mo('t:'+w.N%12,`<b>${TQ[w.N%12].n}</b>`)).join('・')}</p>
+   <p class="note" style="margin-top:0">${W.map(w=>TQP[w.N%12]).join(' · ')}${rep.length?` · ${rep.map(n=>`${n} aparece em ${names.filter(x=>x===n).length} rodas, o que reforça esse traço`).join('; ')}`:''}</p>
+   ${actW?`<p>Você tem <b>${A0} anos</b>, a fase da <b>${actW.lab.toLowerCase()}</b>. O mais visível agora é <b>${TQ[actW.N%12].n}</b> (${TQP[actW.N%12]}): em equilíbrio, <b>${TQ[actW.N%12].v}</b>.</p>`:`<p>Você tem <b>${A0} anos</b>. Depois dos 60, as fontes não dizem qual roda predomina; a roda grande segue como base.</p>`}
+   <p class="note">O que vigiar e o que praticar está logo abaixo.</p>`;
+  const PH=['a base, a vida toda · mais visível dos 40 aos 60','mais visível dos 20 aos 40 anos','mais visível até os 20 anos'];
+  $('tq-wheels').innerHTML=W.map(w=>{const br=w.N%12,t=TQ[br],edge=w.nb.some(x=>x%12!==br),now=w===actW;
+    return `<div class="tqc${now?' now':''}"><div class="note"><b>${w.lab}</b> · ${['ano','mês','dia'][w.idx]} · ${PH[w.idx]}${now?' <b style="color:var(--red)">← agora</b>':''}</div>
+    <div class="k">${t.n} <span class="note" style="font-size:15px">${TQP[br]}</span></div>
+    <p>${t.v.charAt(0).toUpperCase()+t.v.slice(1)}.</p>
+    <div class="chips">${mo('t:'+br,`saiba mais sobre ${t.n}`)}</div>
+    ${edge?'<p class="note" style="color:var(--red)">Perto de uma divisa do calendário: um dia a mais ou a menos muda esta roda.</p>':''}</div>`}).join('');
   // passo a passo
   const cy=D.getUTCFullYear(),cj=K.msToJd(Date.UTC(cy,D.getUTCMonth(),D.getUTCDate(),12)-tz*36e5);
   const tl=[];[cy-1,cy,cy+1].forEach(Y=>K.TERMS.forEach(t=>tl.push({jd:K.termJd(Y,t[0]),nm:t[1]})));tl.sort((x,z)=>x.jd-z.jd);
@@ -73,35 +79,33 @@ function run(c){
   <li><b>Dia</b>: ${dmy(D)} é o dia <b>${kan(W[2].N)}</b> no ciclo de 60 dias. Caractere de baixo <b>${B[db]}</b> (${AN[db]}), 宮 <b>${TQ[db].n}</b>: a ${mo('w:2','roda pequena')}.</li>
   <li>Resultado: <b>${names.join('・')}</b>.</li>`;
   // leitura personalizada: a roda da fase de vida atual em primeiro plano, a roda grande ao fundo
-  const A=Math.floor(age),act=W.find(w=>age>=w.ph[0]&&age<w.ph[1]),big=TQ[W[0].N%12];
-  const line=(w,t)=>`${mo('t:'+w.N%12,`<b>${t.n}</b> ${B[w.N%12]} ${AN[w.N%12]}`)} — ${t.v}`;
-  $('tq-read').innerHTML=`<h3>Leitura do seu resultado</h3>
-  ${act?`<p>Você tem <b>${A} anos</b>, fase da ${mo('w:'+act.idx,act.lab.toLowerCase())}. O temperamento mais visível agora: ${line(act,TQ[act.N%12])}.</p>
-  <p><b>Ponto de atenção:</b> ${TQ[act.N%12].c}. <b>O que praticar:</b> ${TQ[act.N%12].k}.</p>`:`<p>Você tem <b>${A} anos</b>. Para depois dos 60, as fontes não dizem qual roda predomina; a roda grande segue como base.</p>`}
-  ${act!==W[0]?`<p><b>Ao fundo</b>, a vida inteira, está a ${mo('w:0','roda grande')}: ${line(W[0],big)}. Vício a vigiar: ${big.c}.</p>`:`<p>A roda da sua fase é a própria roda grande, a base do temperamento: o que ela mostra agora pesa em dobro.</p>`}
-  <p class="note">As outras rodas continuam presentes, em segundo plano: ${W.filter(w=>w!==act&&w!==W[0]).map(w=>`${w.k} ${TQ[w.N%12].n} (${TQ[w.N%12].v})`).join('; ')||'—'}.</p>`;
+  // o que vigiar e o que praticar, um bloco por nome (sem repetir), começando pelo mais visível agora
+  const grp=[];W.forEach(w=>{const g=grp.find(x=>x.b===w.N%12);g?g.w.push(w):grp.push({b:w.N%12,w:[w]})});
+  grp.sort((x,z)=>(z.w.includes(actW)?1:0)-(x.w.includes(actW)?1:0));
+  $('tq-read').innerHTML=`<h3>O que vigiar e o que praticar</h3>
+  ${grp.map(g=>{const t=TQ[g.b],now=g.w.includes(actW);return `<div class="pv-item${now?' now':''}"><p>${mo('t:'+g.b,`<b>${t.n}</b> ${TQP[g.b]}`)} <span class="note">${g.w.map(w=>w.lab.toLowerCase()).join(' e ')}${now?' · o mais visível agora':''}</span></p>
+   <p><b>Quando passa da medida</b>: ${t.c}.</p><p><b>O que praticar</b>: ${t.k}.</p>
+   <p class="pv-q">Para pensar: lembre de um momento recente em que apareceu o lado bom (“${t.v.split(/[;,]/)[0].trim()}”) e de um em que passou da medida (“${t.c.split(';')[0].trim()}”).</p></div>`}).join('')}`;
   // variante: a regra resumida (nascidos até setembro contam o ano anterior; mês e dia do nascimento)
   const aY=m<=9?y-1:y,alt=[mod(aY-4,12),c.monN%12,c.dayN%12],con=W.map(w=>w.N%12);
   const cmp=document.getElementById('tq-cmp');
-  if(cmp)cmp.innerHTML=`<h3 class="h3">Experimente: duas maneiras de contar</h3>
-   <p>Existe também uma contagem mais simples do 天源術: para o ano, quem nasce <b>até setembro</b> conta o ano anterior e quem nasce <b>de outubro em diante</b>, o mesmo ano; para as outras rodas, valem o <b>mês</b> e o <b>dia do nascimento</b>. O cálculo acima conta tudo pela <b>data da concepção</b> (265 dias). Compare:</p>
+  if(cmp)cmp.innerHTML=`<p>Existe também uma contagem mais simples do 天源術: para o ano, quem nasce <b>até setembro</b> conta o ano anterior e quem nasce <b>de outubro em diante</b>, o mesmo ano; para as outras rodas, valem o <b>mês</b> e o <b>dia do nascimento</b>. O cálculo acima conta tudo pela <b>data da concepção</b> (265 dias). Compare:</p>
    <div class="scroll"><table class="pt"><thead><tr><th>Roda</th><th>Pela concepção (265 dias)</th><th>Pela regra resumida</th></tr></thead><tbody>
    ${['Roda grande · 大輪','Roda média · 中輪','Roda pequena · 小輪'].map((l,k)=>`<tr${con[k]===alt[k]?'':' class="cur"'}><td>${mo('w:'+k,l)}</td><td>${mo('t:'+con[k],`<b>${TQ[con[k]].n}</b> ${B[con[k]]} ${AN[con[k]]}`)}</td><td>${mo('t:'+alt[k],`<b>${TQ[alt[k]].n}</b> ${B[alt[k]]} ${AN[alt[k]]}`)}<br><span class="note">${['ano '+aY+(m<=9?' (nasceu até setembro: ano anterior)':' (nasceu de outubro em diante: mesmo ano)'),'mês do nascimento','dia do nascimento'][k]}</span></td></tr>`).join('')}
    </tbody></table></div>
    <p>${con.every((x,k)=>x===alt[k])?'As duas maneiras dão o mesmo resultado para você.':`Resultado: <b>${con.map(x=>TQ[x].n).join('・')}</b> pela concepção e <b>${alt.map(x=>TQ[x].n).join('・')}</b> pela regra resumida. As linhas destacadas mudam.`}</p>
    <p class="note">Para o exemplo de teste (23/12/1882), só a contagem pela concepção dá 合・豊・老; pela regra resumida daria 合・滋・緩. Compare as duas com o que você vê na pessoa, usando o guia de sinais logo abaixo.</p>`;
   const mine=new Set(W.map(w=>w.N%12));
-  $('tq-table').tBodies[0].innerHTML=TQ.map((t,i)=>`<tr class="clk${mine.has(i)?' cur':''}" data-more="t:${i}"><td>${B[i]} ${AN[i]}</td><td class="kk2">${t.n} <span class="note">${t.y}</span></td><td>${TQM[i]}</td><td class="rel">${t.v}</td><td class="rel">${t.c}</td><td class="rel">${t.k}</td></tr>`).join('');
+  $('tq-table').tBodies[0].innerHTML=TQ.map((t,i)=>`<tr class="clk${mine.has(i)?' cur':''}" data-more="t:${i}"><td>${B[i]} ${AN[i]}</td><td class="kk2">${t.n} <span class="note">${TQP[i]}</span></td><td class="rel">${TQM[i]}</td><td class="rel">${t.v}</td><td class="rel">${t.c}</td><td class="rel">${t.k}</td><td class="rel">${t.f}</td></tr>`).join('');
 }
 // ---- 畑: explicação e guia dos sinais de cada 宮 (nada é marcado nem guardado) ----
 function hata(){
   const box=document.getElementById('tq-hata');if(!box)return;
   const wl=last?last.W.map((w,k)=>({k,b:w.N%12})):[],lab=k=>['roda grande','roda média','roda pequena'][k];
   const mine=i=>wl.filter(w=>w.b===i).map(w=>lab(w.k));
-  box.innerHTML=`<p class="lead">As três rodas <b>nunca mudam</b>. O <b>畑</b> (“campo”) é o que aparece <b>além delas</b>, e se lê sobretudo na <b>fisionomia</b>: no rosto, no corpo e no jeito. Por isso o 畑 não sai da data e muda com o tempo.</p>
-  <p>No método, as próprias rodas também se mostram na fisionomia. Para entender melhor a pessoa, compare os sinais das rodas dela, destacados abaixo, com o que você vê no rosto e no jeito. Se aparecerem sinais de outro 宮, é isso que o método chama de 畑.</p>
-  <div class="scroll"><table class="pt"><thead><tr><th>宮</th><th>Fisionomia e sinais</th></tr></thead><tbody>${TQ.map((t,i)=>{const r=mine(i);return `<tr class="clk${r.length?' cur':''}" data-more="t:${i}"><td class="kk2">${t.n} <span class="note">${K.B[i]} ${K.AN[i]}</span>${r.length?`<br><span class="mtag">${r.join(', ')}</span>`:''}</td><td class="rel">${t.f}</td></tr>`}).join('')}</tbody></table></div>
-  <p class="note">No 淘宮術, a leitura da fisionomia se aprende com estudo e longa experiência; aqui o guia serve para conhecer o método.</p>`;
+  const own=[...new Set(wl.map(w=>w.b))];
+  box.innerHTML=own.length?`<h3>Os sinais dos seus nomes</h3><p class="note">Para comparar com o que você vê no espelho. Se aparecerem sinais de outro nome, é o que o método chama de campo (畑).</p>
+  <ul class="li">${own.map(i=>`<li>${mo('t:'+i,`<b>${TQ[i].n}</b> ${TQP[i]}`)} <span class="note">${mine(i).join(' e ')}</span>: ${TQ[i].f}.</li>`).join('')}</ul>`:'';
 }
 // ---- 9. O proveito, na prática: reconhecer-se, compreender o outro, uma prática para hoje (nada é guardado) ----
 const LB=['roda grande','roda média','roda pequena'];
@@ -110,14 +114,11 @@ function wheelsOf(y,m,d,tz){const D=new Date(Date.UTC(y,m-1,d)-OFF*864e5),q=K.pi
 const grpOf=W=>{const g=[];W.forEach((b,k)=>{const x=g.find(z=>z.b===b);x?x.k.push(k):g.push({b,k:[k]})});return g};
 const TRI=[[8,0,4],[11,3,7],[2,6,10],[5,9,1]];
 function proveito(c){
-  const me=document.getElementById('pv-me');if(!me||!last)return;
+  if(!document.getElementById('pv-today')||!last)return;
   const {B,AN}=K,W=last.W.map(w=>w.N%12),act=last.age<20?2:last.age<40?1:0;
-  me.innerHTML=`<h3>1. Reconhecer-se</h3><p class="note">Leia com calma e pense num exemplo recente da sua vida. Não é preciso escrever nada.</p>
-   ${grpOf(W).map(g=>{const t=TQ[g.b];return `<div class="pv-item${g.k.includes(act)?' now':''}"><p>${mo('t:'+g.b,`<b>${t.n}</b>`)} <span class="note">${g.k.map(k=>LB[k]).join(' e ')}${g.k.includes(act)?' · a mais visível agora':''}</span></p>
-   <p><b>Em equilíbrio</b>, aparece como: ${t.v}.</p><p><b>Quando passa da medida</b>: ${t.c}.</p><p class="pv-q">Em que situação isso aparece em você?</p></div>`}).join('')}`;
   // 3. uma prática para hoje: muda a cada dia, sem guardar nada
   const t=TQ[W[act]],its=t.k.split(/;\s*/).filter(Boolean),day=Math.floor((Date.now()+c.tz*36e5)/864e5),pick=its[day%its.length];
-  document.getElementById('pv-today').innerHTML=`<h3>3. Uma prática para hoje</h3><p class="pv-big">${pick.charAt(0).toUpperCase()+pick.slice(1)}.</p>
+  document.getElementById('pv-today').innerHTML=`<h3>Uma prática para hoje</h3><p class="pv-big">${pick.charAt(0).toUpperCase()+pick.slice(1)}.</p>
    <p class="note">Vem do “como 淘げる” da sua ${LB[act]}, ${mo('t:'+W[act],t.n)}. Amanhã a sugestão muda. ${mo('q:tougu','o que é 淘げる')}</p>`;
   other();
 }

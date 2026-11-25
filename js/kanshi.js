@@ -113,35 +113,31 @@ function run(c){
     <div class="ksn">${name(N)} <span class="pill ${N%2?'yin':'yang'}">${N%2?'yin':'yang'}</span></div>
     <div class="note">${yomi(N)} · nº ${N+1} de 60</div>
     <div class="chips">${more('s:'+s,`<b>${S[s]}</b> <span class="e${s>>1}">${ELP[s>>1]}</span> ${s%2?'yin':'yang'}`)}${more('b:'+b,`<b>${B[b]}</b> ${AN[b]}`)}</div>
-    <p class="note">Natureza do animal: ${NAT[b]}.</p>
     <details class="more"><summary>Ver o cálculo</summary><ol class="calc">${steps[i]}<li>Juntos: <b>${kan(N)}</b>.</li></ol></details></div>`};
   $('ks-cards').innerHTML=P.map((N,i)=>card(i,N)).join('')+(c.noH?'<div class="ksc off"><span class="note">Hora</span><p>Sem a hora de nascimento, este pilar fica de fora.</p></div>':'');
   // contagens
   const e=[0,0,0,0,0];let yang=0;P.forEach(N=>{e[(N%10)>>1]++;e[BE[N%12]]++;if(N%2===0)yang+=2});
   const tot=P.length*2,mx=Math.max(...e),miss=e.map((v,i)=>v?null:i).filter(v=>v!==null),top=e.map((v,i)=>v===mx?i:null).filter(v=>v!==null);
   const elc=i=>more('e:'+i,`<span class="e${i}">${ELP[i]}</span>`);
-  // resumo
-  let sum=document.getElementById('ks-sum');if(!sum){$('ks-cards').insertAdjacentHTML('beforebegin','<div class="card ks-sum" id="ks-sum"></div>');sum=document.getElementById('ks-sum')}
-  sum.innerHTML=`<h3>Em resumo</h3><ul class="ks-list">${P.map((N,i)=>`<li><b>${['Ano','Mês','Dia','Hora'][i]}</b> <span class="kk2">${kan(N)}</span> — ${name(N)}, ${N%2?'yin':'yang'}</li>`).join('')}</ul>
-   <p>Elemento que mais aparece: ${top.map(elc).join(' e ')}${miss.length?` · ausente: ${miss.map(elc).join(' e ')}`:' · todos os elementos aparecem'} · ${yang>tot-yang?'predomina o <b>yang</b>':yang<tot-yang?'predomina o <b>yin</b>':'yang e yin em <b>equilíbrio</b>'}.</p>
-   <p class="note">Toque em qualquer botão com “›” para saber mais: ${more('c:yy','yang e yin')} ${more('c:el','os cinco elementos')} ${more('c:c6','o ciclo de 60')} ${more('c:rs','o 立春')}</p>`;
-  // relações entre os seus pilares
+  const put=(id,h)=>{const el=document.getElementById(id);if(el)el.innerHTML=h};
+  const dom=top[0];
+  // Resultado de "Os cinco elementos": a contagem e o que ela diz
+  put('ks-el',`<h3>Os elementos nos seus ${tot} caracteres</h3><div class="bars">${e.map((v,i)=>`<div class="bar e${i}"><span>${elc(i)}</span><div class="tr"><i style="width:${v/Math.max(mx,1)*100}%"></i></div><span class="n">${v}</span></div>`).join('')}</div>
+   <p><b>Sua força.</b> O elemento que mais aparece é ${top.map(i=>more('e:'+i,`<b>${ELP[i]}</b>`)).join(' e ')}: você ${ET[dom].p}. Na medida certa é a sua força; em excesso, ${ET[dom].x}.</p>
+   <p><b>O que equilibraria.</b> ${miss.length?miss.map(i=>`Falta ${more('e:'+i,`<b>${ELP[i]}</b>`)}: vale cultivar ${ET[i].c}`).join('. ')+'.':`Todos os elementos aparecem; o ponto de cuidado é não deixar ${ELP[dom].toLowerCase()} dominar demais.`}</p>`);
+  // relações: as dos troncos vão para "Os cinco elementos", as dos ramos para "Os doze ramos"
   const RT={gen:'alimenta',genby:'é alimentado por',ctl:'controla',ctlby:'é controlado por',eq:'tem o mesmo elemento que'};
   const RS={gen:'相生 · apoio, fluxo',genby:'相生 · apoio, fluxo',ctl:'相剋 · tensão, disciplina',ctlby:'相剋 · tensão, disciplina',eq:'比和 · reforço'};
-  const lab=['ano','mês','dia','hora'],de=['do ano','do mês','do dia','da hora'],art=['o ano','o mês','o dia','a hora'],rel=[];
-  for(let i=0;i+1<P.length;i++){const a=P[i]%10,b=P[i+1]%10,r=genR(a>>1,b>>1);rel.push(`<li>Tronco ${de[i]} <b>${S[a]}</b> (${ELP[a>>1]}) ${RT[r]} o ${de[i+1]} <b>${S[b]}</b> (${ELP[b>>1]}) — <span class="note">${RS[r]}</span></li>`)}
+  const lab=['ano','mês','dia','hora'],de=['do ano','do mês','do dia','da hora'],art=['o ano','o mês','o dia','a hora'],relS=[],relB=[];
+  for(let i=0;i+1<P.length;i++){const a=P[i]%10,b=P[i+1]%10,r=genR(a>>1,b>>1);relS.push(`<li>Tronco ${de[i]} <b>${S[a]}</b> (${ELP[a>>1]}) ${RT[r]} o ${de[i+1]} <b>${S[b]}</b> (${ELP[b>>1]}) — <span class="note">${RS[r]}</span></li>`)}
   const bs=P.map(N=>N%12);
   for(let i=0;i<bs.length;i++)for(let j=i+1;j<bs.length;j++){const a=bs[i],b=bs[j];
-    if(Math.abs(a-b)===6)rel.push(`<li>Ramos ${de[i]} e ${de[j]}, <b>${B[a]}</b> e <b>${B[b]}</b>, são <b>opostos</b> (冲) — <span class="note">forças que puxam para lados contrários; movimento, mudança</span></li>`);
-    else if((a+b)%12===1)rel.push(`<li>Ramos ${de[i]} e ${de[j]}, <b>${B[a]}</b> e <b>${B[b]}</b>, formam um <b>par</b> (六合) — <span class="note">união, apoio mútuo</span></li>`);
-    else if(a===b)rel.push(`<li>${cap(art[i])} e ${art[j]} têm o mesmo ramo, <b>${B[a]}</b> — <span class="note">a natureza do ${AN[a]} aparece em dobro</span></li>`)}
-  SG.forEach(g=>{const h=g.slice(0,3).filter(x=>bs.includes(x));if(h.length===3)rel.push(`<li>Os ramos <b>${g.slice(0,3).map(x=>B[x]).join(' ')}</b> formam um <b>trio</b> completo (三合) — <span class="note">juntos reforçam a ${ELP[g[3]]}</span></li>`);else if(h.length===2&&h.includes(g[1]))rel.push(`<li>Os ramos <b>${h.map(x=>B[x]).join(' e ')}</b> são dois do trio ${g.slice(0,3).map(x=>B[x]).join('')} (半合) — <span class="note">tendem à ${ELP[g[3]]}</span></li>`)});
-  $('ks-bal').innerHTML=`<div class="card"><h3>Os cinco elementos nos seus ${tot} caracteres ${more('c:el','?')}</h3><div class="bars">${e.map((v,i)=>`<div class="bar e${i}"><span>${elc(i)}</span><div class="tr"><i style="width:${v/Math.max(mx,1)*100}%"></i></div><span class="n">${v}</span></div>`).join('')}</div>
-    <p><b>O que mais aparece</b> marca o seu jeito de ser: ${top.map(i=>`<b class="e${i}">${ELP[i]}</b> (${EM[i]})`).join(' e ')}.</p>
-    ${miss.length?`<p><b>O que falta</b> costuma ser o que se precisa cultivar: ${miss.map(i=>`<b class="e${i}">${ELP[i]}</b> (${EM[i]})`).join(' e ')}.</p>`:'<p>Todos os elementos aparecem: um mapa bem distribuído.</p>'}</div>
-   <div class="card"><h3>Yang e yin ${more('c:yy','?')}</h3><p><b>${yang}</b> caracteres yang e <b>${tot-yang}</b> yin: ${yang>tot-yang?'predomina o <b>yang</b>, o lado ativo, expansivo e de iniciativa':yang<tot-yang?'predomina o <b>yin</b>, o lado receptivo, reflexivo e de constância':'yang e yin em <b>equilíbrio</b>'}.</p>
-    <p class="note">Num par do ciclo de 60, tronco e ramo têm sempre a mesma polaridade, então cada pilar é inteiro yang ou inteiro yin: ${P.map((N,i)=>`${lab[i]} ${N%2?'yin':'yang'}`).join(' · ')}.${P.includes(42)?' O par 丙午 junta Fogo yang (丙) e o Cavalo (午), ramo de Fogo e também yang: o par de yang mais acentuado do ciclo.':''}</p></div>
-   <div class="card"><h3>Como os seus caracteres se relacionam ${more('c:rel','?')}</h3><ul class="ks-rel">${rel.join('')||'<li>Nenhuma relação especial entre os seus ramos.</li>'}</ul></div>`;
+    if(Math.abs(a-b)===6)relB.push(`<li>Ramos ${de[i]} e ${de[j]}, <b>${B[a]}</b> e <b>${B[b]}</b>, são <b>opostos</b> (冲) — <span class="note">forças que puxam para lados contrários; movimento, mudança</span></li>`);
+    else if((a+b)%12===1)relB.push(`<li>Ramos ${de[i]} e ${de[j]}, <b>${B[a]}</b> e <b>${B[b]}</b>, formam um <b>par</b> (六合) — <span class="note">união, apoio mútuo</span></li>`);
+    else if(a===b)relB.push(`<li>${cap(art[i])} e ${art[j]} têm o mesmo ramo, <b>${B[a]}</b> — <span class="note">a natureza do ${AN[a]} aparece em dobro</span></li>`)}
+  SG.forEach(g=>{const h=g.slice(0,3).filter(x=>bs.includes(x));if(h.length===3)relB.push(`<li>Os ramos <b>${g.slice(0,3).map(x=>B[x]).join(' ')}</b> formam um <b>trio</b> completo (三合) — <span class="note">juntos reforçam a ${ELP[g[3]]}</span></li>`);else if(h.length===2&&h.includes(g[1]))relB.push(`<li>Os ramos <b>${h.map(x=>B[x]).join(' e ')}</b> são dois do trio ${g.slice(0,3).map(x=>B[x]).join('')} (半合) — <span class="note">tendem à ${ELP[g[3]]}</span></li>`)});
+  put('ks-rel-s',`<ul class="ks-rel">${relS.join('')||'<li>Sem a hora, há poucos troncos para comparar.</li>'}</ul>`);
+  put('ks-rel-b',`<ul class="ks-rel">${relB.join('')||'<li>Nenhuma relação especial entre os seus ramos.</li>'}</ul>`);
   // os seus animais: os ramos do nascimento e das três rodas da concepção
   const ka=document.getElementById('ks-anim');
   if(ka){const marks=[...P.map((N,i)=>[N%12,['ano','mês','dia','hora'][i]]),...(K.tqW||[]).map((b,k)=>[b,['roda grande','roda média','roda pequena'][k]])];
@@ -150,26 +146,25 @@ function run(c){
     <div class="anim">${by.map((t,i)=>`<button type="button" class="an${t.length?' on':''}" data-more="b:${i}"><b>${AN[i]}</b><span class="note">${B[i]} · ${TQN[i]}</span>${t.length?`<span class="mtag">${t.join(', ')}</span>`:''}</button>`).join('')}</div>
     ${by.some(x=>x.length>1)?`<p class="note">Aparecem mais de uma vez: ${by.map((t,i)=>t.length>1?`${AN[i]} (${t.join(', ')})`:'').filter(Boolean).join('; ')}.</p>`:''}
     <p class="note">Toque num animal para ver a natureza dele, o ramo e o nome no 淘宮術.</p>`}
-  // quantos yang tem cada par (o exemplo clássico é o 丙午: hi yang, e yang, uma yang)
-  if(!document.getElementById('ks-yang'))$('ks-bal').insertAdjacentHTML('afterend','<h3 class="h3">Experimente: quantos yang tem um par?</h3><div class="card" id="ks-yang"></div>');
-  const ky=document.getElementById('ks-yang');
-  if(!ky.dataset.ok){ky.dataset.ok='1';ky.innerHTML=`<p>O nome japonês de cada par já conta a sua história: <b>elemento</b> + <i>no</i> + <b>e</b> ou <b>to</b> + <b>animal</b>. Cada parte é yang ou yin. O exemplo clássico é o <b>丙午</b>, <i>hi-no-e-uma</i>: <i>hi</i> (Fogo) é yang, <i>e</i> (irmão mais velho) é yang e <i>uma</i> (Cavalo) é yang: três partes yang.</p>
-   <div id="ks-yang-me"></div>
-   <p><label>Experimente qualquer par: <select id="ks-yang-sel">${Array.from({length:60},(_,n)=>`<option value="${n}">${n+1}. ${S[n%10]}${B[n%12]} · ${SR[n%10]}${BRK[n%12]}</option>`).join('')}</select></label></p>
-   <div id="ks-yang-out"></div>
-   <details class="more"><summary>O 丙午 na história</summary><p>Desde o período Edo corria no Japão a superstição de que mulheres nascidas num ano 丙午 teriam um temperamento forte demais. Ela pesou tanto que, em 1966, o último ano 丙午, os nascimentos no Japão caíram cerca de 25%. O ano de 2026 é de novo um ano 丙午. Pelo cálculo, ele apenas junta três partes yang; o resto é costume.</p></details>`;
-   document.getElementById('ks-yang-sel').addEventListener('change',e=>{document.getElementById('ks-yang-out').innerHTML=yangHTML(+e.target.value)});
-   document.getElementById('ks-yang-sel').value='42';document.getElementById('ks-yang-out').innerHTML=yangHTML(42)}
-  document.getElementById('ks-yang-me').innerHTML=`<p><b>Os seus pilares:</b></p>${P.map((N,i)=>`<div class="yrow"><span class="note">${['Ano','Mês','Dia','Hora'][i]}</span> ${yangHTML(N,true)}</div>`).join('')}`;
+  // os três yang: o seletor “experimente qualquer par” (preenchido uma vez)
+  const ysel=document.getElementById('ks-yang-sel');
+  if(ysel&&!ysel.options.length){ysel.innerHTML=Array.from({length:60},(_,n)=>`<option value="${n}">${n+1}. ${S[n%10]}${B[n%12]} · ${SR[n%10]}${BRK[n%12]}</option>`).join('');
+    ysel.addEventListener('change',e=>{document.getElementById('ks-yang-out').innerHTML=yangHTML(+e.target.value)});
+    ysel.value='42';document.getElementById('ks-yang-out').innerHTML=yangHTML(42)}
+  // os três yang: a tendência de cada pilar (área da vida) e do conjunto
+  const ycnt=N=>{const s=N%10,b=N%12,v=[EYY[s>>1],s%2?'yin':'yang',b%2?'yin':'yang'];return [v.filter(x=>x==='yang').length,v.filter(x=>x==='yin').length]};
+  const tend=(y,n)=>y>n?(y===3?'muito ativo':'mais ativo'):n>y?(n===3?'muito receptivo':'mais receptivo'):'equilibrado';
+  const AREA=['infância e família','juventude e trabalho','você e a vida a dois','maturidade e filhos'];
+  const tot2=P.reduce((a,N)=>{const [y,n]=ycnt(N);return [a[0]+y,a[1]+n]},[0,0]);
+  put('ks-yang-me',`${P.map((N,i)=>{const [y,n]=ycnt(N);return `<div class="yrow"><span class="note">${['Ano','Mês','Dia','Hora'][i]} · ${AREA[i]}</span> ${yangHTML(N,true)} <b class="ytend">${tend(y,n)}</b></div>`}).join('')}
+   <p class="yconj"><b>No conjunto</b>, os seus pilares somam <b>${tot2[0]} partes yang e ${tot2[1]} yin</b>: no geral, um jeito <b>${tend(tot2[0],tot2[1])}</b>.</p>`);
+  put('ks-yy-alt',`Nessa outra contagem, os seus ${tot} caracteres têm <b>${yang} yang e ${tot-yang} yin</b>; por isso as duas podem dar resultados diferentes.`);
   // resumo da personalidade e próximos anos
   if(!document.getElementById('ks-pers'))$('ks-bal').insertAdjacentHTML('afterend','<h3 class="h3">Resumo da personalidade</h3><div class="card ks-pers" id="ks-pers"></div><h3 class="h3">Os próximos anos</h3><div class="card" id="ks-prev"></div>');
-  const yS=ysi%10,yB=ysi%12,mB=monN%12,dB=dayN%12,dom=top[0];
+  const yS=ysi%10,yB=ysi%12,mB=monN%12,dB=dayN%12;
   $('ks-pers').innerHTML=`<p><b>A base.</b> Você nasceu num ano ${DE(yB)} ${more('b:'+yB,`<b>${name(ysi)}</b>`)} (${kan(ysi)}). O animal do ano é o traço mais conhecido de cada pessoa: ${NAT[yB]}. O tronco do ano, ${more('s:'+yS,`<b>${S[yS]}</b>`)}, traz a imagem de ${SIMG[yS]}, ${yS%2?'vivida de forma suave e interior (yin)':'vivida de forma aberta e direta (yang)'}.</p>
-   <p><b>Outras facetas.</b> O mês acrescenta ${ART(mB)} ${more('b:'+mB,AN[mB])} (${NAT[mB]}) e o dia, ${ART(dB)} ${more('b:'+dB,AN[dB])} (${NAT[dB]})${c.noH?'':`; a hora, ${ART(hb)} ${more('b:'+hb,AN[hb])} (${NAT[hb]})`}.</p>
-   <p><b>Força principal.</b> O elemento que mais aparece é ${more('e:'+dom,`<b>${ELP[dom]}</b>`)}: você ${ET[dom].p}. Na medida certa é a sua força; em excesso, ${ET[dom].x}.</p>
-   <p><b>O que equilibraria.</b> ${miss.length?miss.map(i=>`Falta ${more('e:'+i,`<b>${ELP[i]}</b>`)}: vale cultivar ${ET[i].c}`).join('. ')+'.':`Todos os elementos aparecem; o ponto de cuidado é não deixar ${ELP[dom].toLowerCase()} dominar demais.`}</p>
-   <p><b>Ritmo.</b> ${yang>tot-yang?'Predomina o yang: tende a agir primeiro e refletir depois, com energia para começar.':yang<tot-yang?'Predomina o yin: tende a observar antes de agir, com constância para terminar o que começa.':'Yang e yin em equilíbrio: alterna bem ação e reflexão.'}</p>
-   <p class="note">Leitura simbólica tradicional, para reflexão, não um retrato fechado. O 淘宮術, logo abaixo, lê o temperamento pela data da concepção, por isso os animais de lá podem ser outros.</p>`;
+   <p><b>Outras facetas.</b> ${(()=>{const seen=[yB],f=b=>{const r=seen.includes(b)?' de novo, reforçando esse traço':` (${NAT[b]})`;seen.push(b);return `${ART(b)} ${more('b:'+b,AN[b])}${r}`};return `O mês acrescenta ${f(mB)} e o dia, ${f(dB)}${c.noH?'':`; a hora, ${f(hb)}`}`})()}.</p>
+   <p class="note">Leitura simbólica tradicional, para reflexão, não um retrato fechado. As três rodas (no menu ao lado) leem o temperamento pela data da concepção, por isso os animais de lá podem ser outros.</p>`;
   const nq=(()=>{const n=new Date(Date.now()+c.tz*36e5);return K.pillarsAt(n.getUTCFullYear(),n.getUTCMonth()+1,n.getUTCDate(),12,0,c.tz,false)})();
   const rows=Array.from({length:12},(_,k)=>{const Y=nq.yr+k,N=mod(Y-4,60),b=N%12,es=(N%10)>>1,eb=BE[b],fl=[];
     if(b===yB)fl.push(['up','Ano do seu animal (年男・年女): fecha um ciclo de 12 anos e abre outro; bom para recomeços']);

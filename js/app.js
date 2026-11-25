@@ -266,7 +266,7 @@ function calc(){
   window.KS.ctx={y,m,d,h,mi,tz,utc,loc,P,noH,dayN,monN,yearN,ysi,sex:$('sx').value};window.KS.hooks.forEach(f=>{try{f(window.KS.ctx)}catch(e){console.error(e)}});
   const diff=ycal!==ysi?` Atenção: você nasceu antes do 立春 (início do ano tradicional, ~4/fev), então pelo calendário comum o ano seria <b>${kan(ycal)}</b>.`:'';
   const nmP=N=>`<b>${kan(N)}</b> (<i>${roma(N)}</i>, ${AN[N%12]} de ${ELP[Math.floor(N/2)%5]})`;
-  $('sum').innerHTML=`Ano ${nmP(yearN)}, mês ${nmP(monN)}, dia ${nmP(dayN)}${noH?'':`, hora ${nmP(hourN)}`}.${diff}`;
+  $('sum').innerHTML=diff.trim();
   terms(y,tz);
   sel=yearN%60;grid();years();
 }
@@ -275,12 +275,10 @@ function render(list,dayN,noH,A){
   $('pl').innerHTML=list.map(([t,n],i)=>{
     const s=n%10,b=n%12,es=Math.floor(s/2),eb=BE[b],z=i===2?A.srs:ZOU[b];
     const kuu=(b===kb||b===kb+1)&&i!==1?' · Vazio (空亡)':'';
-    return `<div class="p${i===1?' main':''}${i===0&&noH?' off':''}"><span class="no">#${n+1}</span><div class="t">${t}</div>
-    <div class="tsei">${i===1?'Você (日主)':tsl(tsei(ds,s))}</div>
+    return `<div class="p${i===0&&noH?' off':''}"><div class="t">${t}</div>
     <div class="kj"><span class="e${es}">${S[s]}</span><span class="e${eb}">${B[b]}</span></div>
     <div class="rd"><i>${roma(n)}</i></div><div class="on">${AN[b]} de ${ELP[es]}</div>
-    <div class="tags"><span class="tag e${es}">${ELP[es]} ${s%2?'yin':'yang'}</span><span class="tag e${eb}">${AN[b]}</span></div>
-    <div class="meta"><span>Escondidos (蔵干): ${HID[b].map(x=>x===z?`<b>${S[x]}</b>`:S[x]).join(' ')} → ${TSP[tsei(ds,z)]}${i===2?' (司令)':''}</span><span>Energia: <b>${ul(u12(ds,b))}</b>${kuu}</span><span>納音 ${NAT[n>>1]}</span></div></div>`}).join('');
+    <div class="tags"><span class="tag e${es}">${ELP[es]} ${s%2?'yin':'yang'}</span><span class="tag e${eb}">${AN[b]}</span></div></div>`}).join('');
 }
 // ---- Leitura simples: helpers ----
 // tira os parênteses que contêm kanji/kana (o termo clássico fica só no modo estudioso)
